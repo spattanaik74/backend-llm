@@ -7,10 +7,9 @@ from flask_cors import CORS
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.secret_key = 'your_secret_key_here'
 
     db.init_app(app)
-    CORS(app)
+    CORS(app,supports_credentials=True)
     register_routes(app)
 
     with app.app_context():
