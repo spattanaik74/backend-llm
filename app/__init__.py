@@ -1,12 +1,14 @@
 from flask import Flask
 from .config import *
-from .view import register_routes
+from .view import *
 from .models import db
 from flask_cors import CORS
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    
 
     db.init_app(app)
     CORS(app,supports_credentials=True)
