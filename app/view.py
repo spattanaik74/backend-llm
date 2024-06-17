@@ -385,10 +385,10 @@ def register_routes(app):
             date_str = data.get('date')
             if not date_str:
                 return jsonify({"error": "Date is required."}), 400
-            # Convert the date string to datetime object and then to ordinal
+ 
             date = datetime.strptime(date_str, '%Y-%m-%d')
             date_ordinal = date.toordinal()
-            # Create a DataFrame with the correct feature name
+
             features = pd.DataFrame([[date_ordinal]], columns=['date_ordinal'])
             prediction = model.predict(features)
             return jsonify({'prediction': prediction[0]}), 200
@@ -396,12 +396,11 @@ def register_routes(app):
             return jsonify({"error": str(e)}), 500
         
         
-        
-########################################
+
 
     loaded_model = load(r'D:\utkal_labs\machine_learning\price_model2.joblib')
 
-    # Encoded data mappings
+ 
     encoded_data = {
         "RAM": {"2GB": 16,"3GB":20, "4GB": 25, "6GB": 31, "8GB":36,"12GB":8,"256GB":13},
         "ROM/Storage": {"32GB": 14, "64GB": 20, "128GB": 5,"256GB":13},
@@ -419,39 +418,7 @@ def register_routes(app):
         }
     }
 
-    # @app.route('/predict-price', methods=['POST'])
-    # def predict_price():
-    #     token_ = request.headers.get('Authorization')
-    #     if token_ is None:
-    #         return jsonify({'message': 'Token is missing'}), 401
 
-    #     token = token_.split(' ')[1]
-        
-
-    #     try:
-    #         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-    #         username = payload['username']
-    #     except jwt.ExpiredSignatureError:
-    #         return jsonify({'message': 'Token has expired'}), 401
-    #     except jwt.InvalidTokenError:
-    #         return jsonify({'message': 'Invalid token'}), 401
-        
-    #     user = User.query.filter_by(username=username).first()
-    #     if user is None:
-    #         return jsonify({'message': 'User not found'}), 404
-        
-        
-        
-    #     try:
-    #         user_input = request.json
-    #         encoded_input = {feature: encoded_data[feature][user_input[feature]] for feature in encoded_data}
-    #         input_df = pd.DataFrame([encoded_input])
-    #         prediction = loaded_model.predict(input_df)
-    #         return jsonify({'predicted_value': prediction[0]}), 200
-    #     except KeyError as e:
-    #         return jsonify({'error': f'Invalid value: {str(e)}'}), 400
-    #     except Exception as e:
-    #         return jsonify({'error': f'Error: {str(e)}'}), 500
         
         
         
@@ -513,30 +480,20 @@ def register_routes(app):
         if user is None:
             return jsonify({'message': 'User not found'}), 404
         
-        
-
-
-
-        # Get JSON data from request body
+    
         data = request.get_json()
-
-        # Extract input text from JSON data
         user_input = data.get('input')
 
-        # Check if input text is missing
         if not user_input:
             return jsonify({'message': 'Input text is missing'}), 400
 
-        # Hugging Face API credentials (replace with your actual credentials)
         hf_api_token = "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"
         repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
 
-        # Initialize Hugging Face InferenceClient
         llm_client = InferenceClient(model=repo_id, token=hf_api_token, timeout=600)
 
-        # Function to generate response from chatbot
         def generate_response(input_text):
-            prompt = input_text  # Assuming the input text is directly the prompt
+            prompt = input_text  
             response = llm_client.post(
                 json={
                     "inputs": prompt,
@@ -547,10 +504,8 @@ def register_routes(app):
             response_dict = json.loads(response)
             return response_dict[0]["generated_text"]
 
-            # Generate response from chatbot based on user input
         response_text = generate_response(user_input)
 
-            # Return JSON response with bot's generated text
         return jsonify({'response': response_text})
 
 
